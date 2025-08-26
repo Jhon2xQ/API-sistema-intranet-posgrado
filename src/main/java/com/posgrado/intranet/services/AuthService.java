@@ -9,11 +9,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.posgrado.intranet.common.config.CustomUserDetails;
 import com.posgrado.intranet.common.config.CustomUserDetailsService;
+import com.posgrado.intranet.common.utils.CookieUtil;
 import com.posgrado.intranet.common.utils.JwtUtil;
 import com.posgrado.intranet.dtos.auth.LoginRequest;
 import com.posgrado.intranet.dtos.jwt.JwtResponse;
 import com.posgrado.intranet.dtos.jwt.RefreshTokenResponse;
 
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -22,16 +24,22 @@ public class AuthService {
 
   private final AuthenticationManager authenticationManager;
   private final CustomUserDetailsService userDetailsService;
+  private final CookieUtil cookieUtil;
   private final JwtUtil jwtUtil;
 
   @Transactional
-  public JwtResponse login(LoginRequest loginRequest) {
+  public JwtResponse login(LoginRequest loginRequest, HttpServletResponse response) {
     try {
       Authentication authentication = authenticationManager.authenticate(
-          new UsernamePasswordAuthenticationToken(loginRequest.getUsuario(), loginRequest.getContrasenia()));
+          new UsernamePasswordAuthenticationToken(
+              loginRequest.getUsuario(),
+              loginRequest.getContrasenia()
+      ));
       CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
       String jwtToken = jwtUtil.generarToken(authentication);
       String refreshToken = jwtUtil.generarRefreshToken(userDetails.getUsername());
+      cookieUtil.createAccessTokenCookie(response, jwtToken);
+      cookieUtil.createRefreshTokenCookie(response, refreshToken);
       return new JwtResponse(jwtToken, refreshToken, userDetails.getUsername(), 84400000L);
     } catch (BadCredentialsException e) {
       throw new BadCredentialsException("Credenciales invalidad");

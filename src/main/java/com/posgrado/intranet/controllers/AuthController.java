@@ -12,6 +12,7 @@ import com.posgrado.intranet.dtos.auth.LoginRequest;
 import com.posgrado.intranet.dtos.jwt.JwtResponse;
 import com.posgrado.intranet.services.AuthService;
 
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
@@ -22,9 +23,9 @@ public class AuthController {
   private final AuthService authService;
 
   @PostMapping("/login")
-  public ResponseEntity<ApiResponse<JwtResponse>> login(@Valid @RequestBody LoginRequest loginRequest) {
+  public ResponseEntity<ApiResponse<JwtResponse>> login(@Valid @RequestBody LoginRequest loginRequest, HttpServletResponse response) {
     try {
-      JwtResponse jwtResponse = authService.login(loginRequest);
+      JwtResponse jwtResponse = authService.login(loginRequest, response);
       return ResponseEntity.ok(
         ApiResponse.success("Login exitoso", jwtResponse)
       );
