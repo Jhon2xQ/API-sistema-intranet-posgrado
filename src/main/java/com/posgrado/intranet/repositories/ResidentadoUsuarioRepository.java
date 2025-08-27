@@ -7,5 +7,5 @@ import com.posgrado.intranet.entities.TbResidentadoUsuario;
 
 @Repository
 public interface ResidentadoUsuarioRepository extends JpaRepository<TbResidentadoUsuario, String>{
-  
+  boolean existsByUsuario(String usuario);
 }

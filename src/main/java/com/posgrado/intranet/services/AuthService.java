@@ -4,6 +4,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -12,8 +13,11 @@ import com.posgrado.intranet.common.config.CustomUserDetailsService;
 import com.posgrado.intranet.common.utils.CookieUtil;
 import com.posgrado.intranet.common.utils.JwtUtil;
 import com.posgrado.intranet.dtos.auth.LoginRequest;
+import com.posgrado.intranet.dtos.auth.RefreshTokenRequest;
+import com.posgrado.intranet.dtos.auth.RegisterRequest;
 import com.posgrado.intranet.dtos.jwt.JwtResponse;
-import com.posgrado.intranet.dtos.jwt.RefreshTokenResponse;
+import com.posgrado.intranet.entities.TbResidentadoUsuario;
+import com.posgrado.intranet.repositories.ResidentadoUsuarioRepository;
 
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -22,8 +26,10 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class AuthService {
 
+  private final ResidentadoUsuarioRepository usuarioRepository;
   private final AuthenticationManager authenticationManager;
   private final CustomUserDetailsService userDetailsService;
+  private final PasswordEncoder passwordEncoder;
   private final CookieUtil cookieUtil;
   private final JwtUtil jwtUtil;
 
@@ -33,8 +39,7 @@ public class AuthService {
       Authentication authentication = authenticationManager.authenticate(
           new UsernamePasswordAuthenticationToken(
               loginRequest.getUsuario(),
-              loginRequest.getContrasenia()
-      ));
+              loginRequest.getContrasenia()));
       CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
       String jwtToken = jwtUtil.generarToken(authentication);
       String refreshToken = jwtUtil.generarRefreshToken(userDetails.getUsername());
@@ -46,7 +51,19 @@ public class AuthService {
     }
   }
   
-  public JwtResponse refreshToken(RefreshTokenResponse request) {
+  @Transactional
+  public TbResidentadoUsuario register(RegisterRequest registerRequest) {
+    if (usuarioRepository.existsByUsuario(registerRequest.getUsuario())) {
+        throw new RuntimeException("El usuario ya existe");
+    }      
+    TbResidentadoUsuario usuario = TbResidentadoUsuario.builder()
+        .usuario(registerRequest.getUsuario())
+        .contrasenia(passwordEncoder.encode(registerRequest.getContrasenia()))
+        .build();
+    return usuarioRepository.save(usuario);
+  }
+  
+  public JwtResponse refreshToken(RefreshTokenRequest request) {
     String refreshToken = request.getRefreshToken();
     if (!jwtUtil.validarToken(refreshToken) || !jwtUtil.isRefreshToken(refreshToken)) {
       throw new BadCredentialsException("Refresh token invalido");

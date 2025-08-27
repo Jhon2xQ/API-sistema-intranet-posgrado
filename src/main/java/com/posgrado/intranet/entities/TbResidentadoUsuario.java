@@ -2,7 +2,6 @@ package com.posgrado.intranet.entities;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.util.HashSet;
 import java.util.Set;
 
 import jakarta.persistence.Column;
@@ -14,6 +13,7 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -23,6 +23,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
+@Builder
 @Table(name = "tbResidentadoUsuario", schema = "Seguridad")
 public class TbResidentadoUsuario implements Serializable{
   @Serial
@@ -45,5 +46,5 @@ public class TbResidentadoUsuario implements Serializable{
             joinColumns = @JoinColumn(name = "usuario"),
                 inverseJoinColumns = @JoinColumn(name = "idPerfil")
   )
-  private Set<TbResidentadoPerfil> roles = new HashSet<>();
+  private Set<TbResidentadoPerfil> roles;
 }
