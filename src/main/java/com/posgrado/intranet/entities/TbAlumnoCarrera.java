@@ -45,6 +45,6 @@ public class TbAlumnoCarrera implements Serializable {
   private int estadoAlumno;
 
   @Column(name = "monto_maestria")
-  private float montoMaestria;
+  private Double montoMaestria;
 
 }
