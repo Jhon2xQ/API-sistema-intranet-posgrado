@@ -59,6 +59,7 @@ public class SecurityConfig {
       .authorizeHttpRequests(authz -> authz
         /* rutas publicas */
         .requestMatchers("/api/auth/**").permitAll()
+        .requestMatchers("/api/public/**").permitAll()
         .requestMatchers(HttpMethod.GET, "/api/health").permitAll()
         
         /* rutas protegidas */
@@ -79,7 +80,7 @@ public class SecurityConfig {
   public CorsConfigurationSource corsConfigurationSource() {
     CorsConfiguration configuration = new CorsConfiguration();
     configuration.setAllowedOriginPatterns(Arrays.asList("*"));
-    configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+    configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT"));
     configuration.setAllowedHeaders(Arrays.asList("*"));
     configuration.setAllowCredentials(true);
 

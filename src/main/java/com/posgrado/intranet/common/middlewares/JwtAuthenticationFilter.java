@@ -1,7 +1,7 @@
 package com.posgrado.intranet.common.middlewares;
 
 import java.io.IOException;
-import java.util.Optional;
+import java.util.List;
 
 import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -9,11 +9,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import com.posgrado.intranet.common.config.CustomUserDetailsService;
-import com.posgrado.intranet.common.utils.CookieUtil;
+import com.posgrado.intranet.common.config.CustomUserDetails;
 import com.posgrado.intranet.common.utils.JwtUtil;
 
 import jakarta.servlet.FilterChain;
@@ -27,8 +25,6 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @Slf4j
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
-  private final CustomUserDetailsService userDetailsService;
-  private final CookieUtil cookieUtil;
   private final JwtUtil jwtUtil;
 
   @Override
@@ -36,33 +32,29 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
       throws ServletException, IOException {
 
     try {
-      // Primero intentar obtener token desde cookie
-      Optional<String> tokenFromCookie = cookieUtil.getTokenFromCookie(request, cookieUtil.ACCESS_TOKEN_COOKIE);
+      boolean isRefreshEndpoint = request.getRequestURI().contains("/api/auth/refresh");
+      if (!isRefreshEndpoint) {
+        String jwt = jwtUtil.getAccessTokenFromRequest(request);
+        if (jwt != null && jwtUtil.validateToken(jwt) && !jwtUtil.isRefreshToken(jwt)) {
+          String username = jwtUtil.getUsernameFromToken(jwt);
+          String carrera = jwtUtil.getCarreraFromToken(jwt);
+          String especialidad = jwtUtil.getEspecialidadFromToken(jwt);
+          List<String> roles = jwtUtil.getRolesFromToken(jwt);
 
-      // Fallback a Authorization header si no hay cookie
-      String jwt = tokenFromCookie.orElse(getJwtFromRequest(request));
-
-      if (jwt != null && jwtUtil.validarToken(jwt) && !jwtUtil.isRefreshToken(jwt)) {
-        String username = jwtUtil.getUsernameFromToken(jwt);
-        UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userDetails,
-            null, userDetails.getAuthorities());
-        authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-        SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-        log.debug("Usuario autenticado: {}", username);    
+          UserDetails userDetails = new CustomUserDetails(username, carrera, especialidad, roles);
+          UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
+              userDetails,
+              null,
+              userDetails.getAuthorities()
+          );
+          authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+          SecurityContextHolder.getContext().setAuthentication(authentication);
+        }
       }
     } catch (Exception e) {
       log.error("Error en autenticación JWT: {}", e.getMessage());
       SecurityContextHolder.clearContext();
     }
     filterChain.doFilter(request, response);
-  }
-  
-  private String getJwtFromRequest(HttpServletRequest request) {
-    String bearerToken = request.getHeader("Authorization");
-    if (StringUtils.hasText(bearerToken) && bearerToken != null && bearerToken.startsWith("Bearer ")) {
-      return bearerToken.substring(7);
-    }
-    return null;
   }
 }

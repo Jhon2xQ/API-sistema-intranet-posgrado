@@ -13,12 +13,12 @@ import com.posgrado.intranet.common.config.CustomUserDetailsService;
 import com.posgrado.intranet.common.utils.CookieUtil;
 import com.posgrado.intranet.common.utils.JwtUtil;
 import com.posgrado.intranet.dtos.auth.LoginRequest;
-import com.posgrado.intranet.dtos.auth.RefreshTokenRequest;
 import com.posgrado.intranet.dtos.auth.RegisterRequest;
 import com.posgrado.intranet.dtos.jwt.JwtResponse;
 import com.posgrado.intranet.entities.TbResidentadoUsuario;
 import com.posgrado.intranet.repositories.ResidentadoUsuarioRepository;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 
@@ -39,15 +39,16 @@ public class AuthService {
       Authentication authentication = authenticationManager.authenticate(
           new UsernamePasswordAuthenticationToken(
               loginRequest.getUsuario(),
-              loginRequest.getContrasenia()));
+              loginRequest.getContrasenia())
+      );
       CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-      String jwtToken = jwtUtil.generarToken(authentication);
-      String refreshToken = jwtUtil.generarRefreshToken(userDetails.getUsername());
-      cookieUtil.createAccessTokenCookie(response, jwtToken);
+      String refreshToken = jwtUtil.generateRefreshToken(userDetails.getUsername());
+      String jti = jwtUtil.getJtiFromToken(refreshToken);
+      String accessToken = jwtUtil.generateAccessToken(authentication, jti);
       cookieUtil.createRefreshTokenCookie(response, refreshToken);
-      return new JwtResponse(jwtToken, refreshToken, userDetails.getUsername(), 84400000L);
+      return new JwtResponse(accessToken, userDetails.getUsername());
     } catch (BadCredentialsException e) {
-      throw new BadCredentialsException("Credenciales invalidad");
+      throw new BadCredentialsException("Credenciales invalidas");
     }
   }
   
@@ -63,16 +64,35 @@ public class AuthService {
     return usuarioRepository.save(usuario);
   }
   
-  public JwtResponse refreshToken(RefreshTokenRequest request) {
-    String refreshToken = request.getRefreshToken();
-    if (!jwtUtil.validarToken(refreshToken) || !jwtUtil.isRefreshToken(refreshToken)) {
-      throw new BadCredentialsException("Refresh token invalido");
+  @Transactional
+  public JwtResponse refreshToken(HttpServletRequest request) {
+    String accessToken = jwtUtil.getAccessTokenFromRequest(request);
+    String refreshToken = cookieUtil.getRefreshTokenFromCookie(request);
+    if (accessToken == null || refreshToken == null) {
+      throw new BadCredentialsException("Tokens no proporcionados");
+    }
+    if (!jwtUtil.validateToken(refreshToken) || !jwtUtil.isRefreshToken(refreshToken)) {
+      throw new BadCredentialsException("Refresh token invalido o expirado");
+    }
+    if (!jwtUtil.validateExpiredToken(accessToken)) {
+      throw new BadCredentialsException("Access token invalido");
+    }
+    String accessTokenJti = jwtUtil.getJtiFromToken(accessToken);
+    String refreshTokenJti = jwtUtil.getJtiFromToken(refreshToken);
+    if (!accessTokenJti.equals(refreshTokenJti)) {
+      throw new BadCredentialsException("Tokens no asociados");
     }
     String username = jwtUtil.getUsernameFromToken(refreshToken);
     CustomUserDetails userDetails = (CustomUserDetails) userDetailsService.loadUserByUsername(username);
-    Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails, null,
+    Authentication authentication = new UsernamePasswordAuthenticationToken(
+        userDetails,
+        null,
         userDetails.getAuthorities());
-    String newJwt = jwtUtil.generarToken(authentication);
-    return new JwtResponse(newJwt, refreshToken, userDetails.getUsername(), 84400000L);
+    String newJwt = jwtUtil.generateAccessToken(authentication, refreshTokenJti);
+    return new JwtResponse(newJwt, userDetails.getUsername());
+  }
+  
+  public void logout(HttpServletResponse response) {
+    cookieUtil.clearTokenCookies(response);
   }
 }
