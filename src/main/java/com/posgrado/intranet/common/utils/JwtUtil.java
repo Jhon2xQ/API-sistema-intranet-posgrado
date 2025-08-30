@@ -122,14 +122,16 @@ public class JwtUtil {
       return true;
     } catch (MalformedJwtException e) {
       log.error("JWT token malformado: {}", e.getMessage());
+      return false;
     } catch (ExpiredJwtException e) {
       return true;
     } catch (UnsupportedJwtException e) {
       log.error("JWT token no soportado: {}", e.getMessage());
+      return false;
     } catch (IllegalArgumentException e) {
       log.error("JWT claims vacío: {}", e.getMessage());
+      return false;
     }
-    return false;
   }
   
   public boolean isRefreshToken(String token) {

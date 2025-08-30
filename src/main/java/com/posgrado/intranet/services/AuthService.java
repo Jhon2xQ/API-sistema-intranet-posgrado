@@ -68,15 +68,6 @@ public class AuthService {
   public JwtResponse refreshToken(HttpServletRequest request) {
     String accessToken = jwtUtil.getAccessTokenFromRequest(request);
     String refreshToken = cookieUtil.getRefreshTokenFromCookie(request);
-    if (accessToken == null || refreshToken == null) {
-      throw new BadCredentialsException("Tokens no proporcionados");
-    }
-    if (!jwtUtil.validateToken(refreshToken) || !jwtUtil.isRefreshToken(refreshToken)) {
-      throw new BadCredentialsException("Refresh token invalido o expirado");
-    }
-    if (!jwtUtil.validateExpiredToken(accessToken)) {
-      throw new BadCredentialsException("Access token invalido");
-    }
     String accessTokenJti = jwtUtil.getJtiFromToken(accessToken);
     String refreshTokenJti = jwtUtil.getJtiFromToken(refreshToken);
     if (!accessTokenJti.equals(refreshTokenJti)) {
