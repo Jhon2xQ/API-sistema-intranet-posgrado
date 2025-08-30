@@ -9,12 +9,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.posgrado.intranet.dtos.ApiResponse;
 import com.posgrado.intranet.dtos.auth.LoginRequest;
-import com.posgrado.intranet.dtos.auth.RefreshTokenRequest;
 import com.posgrado.intranet.dtos.auth.RegisterRequest;
 import com.posgrado.intranet.dtos.jwt.JwtResponse;
 import com.posgrado.intranet.entities.TbResidentadoUsuario;
 import com.posgrado.intranet.services.AuthService;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -26,15 +26,15 @@ public class AuthController {
   private final AuthService authService;
 
   @PostMapping("/login")
-  public ResponseEntity<ApiResponse<JwtResponse>> login(@Valid @RequestBody LoginRequest loginRequest,
+  public ResponseEntity<ApiResponse<JwtResponse>> login(
+        @Valid @RequestBody LoginRequest loginRequest,
       HttpServletResponse response) {
     try {
       JwtResponse jwtResponse = authService.login(loginRequest, response);
-      return ResponseEntity.ok(
-          ApiResponse.success("Login exitoso", jwtResponse));
+      return ResponseEntity.ok(ApiResponse.success("Login exitoso", jwtResponse));
     } catch (Exception e) {
       return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(
-          ApiResponse.error("Error de autenticacion: " + e));
+          ApiResponse.error("Error de autenticacion"));
     }
   }
   
@@ -52,15 +52,20 @@ public class AuthController {
   }
   
   @PostMapping("/refresh")
-  public ResponseEntity<ApiResponse<JwtResponse>> refreshToken(@Valid @RequestBody RefreshTokenRequest request) {
+  public ResponseEntity<ApiResponse<JwtResponse>> refreshToken(HttpServletRequest request) {
     try {
       JwtResponse jwtResponse = authService.refreshToken(request);
       return ResponseEntity.ok(
-          ApiResponse.success("Token renovado exitosamente", jwtResponse)
-      );
+          ApiResponse.success("Token renovado exitosamente", jwtResponse));
     } catch (Exception e) {
       return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
           .body(ApiResponse.error("Error al renovar token: " + e.getMessage()));
     }
+  }
+  
+  @PostMapping("/logout")
+  public ResponseEntity<ApiResponse<String>> logout(HttpServletResponse response) {
+    authService.logout(response);
+    return ResponseEntity.ok(ApiResponse.success("Logout exitoso"));
   }
 }

@@ -27,7 +27,7 @@ public class CookieUtil {
    * Crear cookie para el access token
    */
   public void createAccessTokenCookie(HttpServletResponse response, String token) {
-    Cookie cookie = createCookie(ACCESS_TOKEN_COOKIE, token, cookieProperties.getMaxAge());
+    Cookie cookie = createCookie(ACCESS_TOKEN_COOKIE, token, cookieProperties.getAccessMaxAge());
     response.addCookie(cookie);
     log.debug("Cookie de access token creada");
   }
@@ -113,5 +113,12 @@ public class CookieUtil {
    */
   public boolean hasRefreshToken(HttpServletRequest request) {
     return getTokenFromCookie(request, REFRESH_TOKEN_COOKIE).isPresent();
+  }
+
+  /**
+   * Obtener refresh token desde cookie
+   */
+  public String getRefreshTokenFromCookie(HttpServletRequest request) {
+    return getTokenFromCookie(request, REFRESH_TOKEN_COOKIE).orElse(null);
   }
 }
