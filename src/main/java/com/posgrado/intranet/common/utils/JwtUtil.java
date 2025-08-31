@@ -46,6 +46,7 @@ public class JwtUtil {
         .subject(userDetails.getUsername())
         .claim("carrera", userDetails.getCarrera())
         .claim("especialidad", userDetails.getEspecialidad())
+        .claim("curricula", userDetails.getCurricula())
         .claim("roles", roles)
         .claim("jti", jti)
         .issuedAt(Date.from(Instant.now()))
@@ -88,6 +89,10 @@ public class JwtUtil {
 
   public String getEspecialidadFromToken(String token) {
     return getClaimsFromToken(token).get("especialidad", String.class);
+  }
+
+  public Integer getCurriculaFromToken(String token) {
+    return getClaimsFromToken(token).get("curricula", Integer.class);
   }
 
   public List<String> getRolesFromToken(String token) {
