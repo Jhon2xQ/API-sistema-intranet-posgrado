@@ -24,6 +24,6 @@ public class CustomUserDetailsService implements UserDetailsService {
         .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado"));
     TbAlumnoCarrera alumno = aCarreraRepository.findByAlumnoAndEstadoAlumnoNot(username, 5)
         .orElseThrow(() -> new UsernameNotFoundException("Alumno desactivado"));
-    return new CustomUserDetails(usuario, alumno.getCarrera(), alumno.getEspecialidad());
+    return new CustomUserDetails(usuario, alumno.getCarrera(), alumno.getEspecialidad(), alumno.getCurricula());
   }
 }

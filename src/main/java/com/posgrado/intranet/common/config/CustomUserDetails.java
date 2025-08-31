@@ -17,23 +17,26 @@ public class CustomUserDetails implements UserDetails {
   private final TbResidentadoUsuario usuario;
   private final String carrera;
   private final String especialidad;
+  private final Integer curricula;
   private final String username;
   private final List<String> authorities;
 
   // Constructor para cuando se crea desde la BD (login)
-  public CustomUserDetails(TbResidentadoUsuario usuario, String carrera, String especialidad) {
+  public CustomUserDetails(TbResidentadoUsuario usuario, String carrera, String especialidad, Integer curricula) {
     this.usuario = usuario;
     this.carrera = carrera;
     this.especialidad = especialidad;
+    this.curricula = curricula;
     this.username = null;
     this.authorities = null;
   }
 
   // Constructor para cuando se crea desde el token JWT (filtro)
-  public CustomUserDetails(String username, String carrera, String especialidad, List<String> authorities) {
+  public CustomUserDetails(String username, String carrera, String especialidad, Integer curricula, List<String> authorities) {
     this.usuario = null;
     this.carrera = carrera;
     this.especialidad = especialidad;
+    this.curricula = curricula;
     this.username = username;
     this.authorities = authorities;
   }

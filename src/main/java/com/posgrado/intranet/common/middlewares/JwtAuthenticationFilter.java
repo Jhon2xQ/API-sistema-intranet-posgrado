@@ -52,9 +52,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
           String username = jwtUtil.getUsernameFromToken(accessToken);
           String carrera = jwtUtil.getCarreraFromToken(accessToken);
           String especialidad = jwtUtil.getEspecialidadFromToken(accessToken);
+          Integer curricula = jwtUtil.getCurriculaFromToken(accessToken);
           List<String> roles = jwtUtil.getRolesFromToken(accessToken);
 
-          UserDetails userDetails = new CustomUserDetails(username, carrera, especialidad, roles);
+          UserDetails userDetails = new CustomUserDetails(username, carrera, especialidad, curricula, roles);
           UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
               userDetails,
               null,
