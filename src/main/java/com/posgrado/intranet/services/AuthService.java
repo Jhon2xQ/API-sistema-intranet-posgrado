@@ -55,13 +55,21 @@ public class AuthService {
   @Transactional
   public TbResidentadoUsuario register(RegisterRequest registerRequest) {
     if (usuarioRepository.existsByUsuario(registerRequest.getUsuario())) {
-        throw new RuntimeException("El usuario ya existe");
-    }      
+      throw new RuntimeException("El usuario ya existe");
+    }
     TbResidentadoUsuario usuario = TbResidentadoUsuario.builder()
         .usuario(registerRequest.getUsuario())
         .contrasenia(passwordEncoder.encode(registerRequest.getContrasenia()))
         .build();
     return usuarioRepository.save(usuario);
+  }
+  
+  @Transactional
+  public void updatePassword(String username, String newPassword) {
+    TbResidentadoUsuario usuario = usuarioRepository.findById(username)
+        .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+    usuario.setContrasenia(passwordEncoder.encode(newPassword));
+    usuarioRepository.save(usuario);
   }
   
   @Transactional
