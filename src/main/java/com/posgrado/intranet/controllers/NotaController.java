@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.posgrado.intranet.common.config.CustomUserDetails;
 import com.posgrado.intranet.dtos.ApiResponse;
-import com.posgrado.intranet.dtos.nota.NotaResDto;
+import com.posgrado.intranet.dtos.NotaResDto;
 import com.posgrado.intranet.services.NotaService;
 
 import lombok.RequiredArgsConstructor;

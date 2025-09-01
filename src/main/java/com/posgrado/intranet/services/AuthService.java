@@ -12,9 +12,9 @@ import com.posgrado.intranet.common.config.CustomUserDetails;
 import com.posgrado.intranet.common.config.CustomUserDetailsService;
 import com.posgrado.intranet.common.utils.CookieUtil;
 import com.posgrado.intranet.common.utils.JwtUtil;
-import com.posgrado.intranet.dtos.auth.LoginRequest;
-import com.posgrado.intranet.dtos.auth.RegisterRequest;
-import com.posgrado.intranet.dtos.jwt.JwtResponse;
+import com.posgrado.intranet.dtos.JwtResponse;
+import com.posgrado.intranet.dtos.LoginRequest;
+import com.posgrado.intranet.dtos.RegisterRequest;
 import com.posgrado.intranet.entities.TbResidentadoUsuario;
 import com.posgrado.intranet.repositories.ResidentadoUsuarioRepository;
 

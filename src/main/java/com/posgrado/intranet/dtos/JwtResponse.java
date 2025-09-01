@@ -1,4 +1,4 @@
-package com.posgrado.intranet.dtos.jwt;
+package com.posgrado.intranet.dtos;
 
 import lombok.Data;
 

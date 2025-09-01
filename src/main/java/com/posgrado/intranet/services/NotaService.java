@@ -5,8 +5,8 @@ import java.util.stream.Stream;
 
 import org.springframework.stereotype.Service;
 
-import com.posgrado.intranet.dtos.nota.NotaDto;
-import com.posgrado.intranet.dtos.nota.NotaResDto;
+import com.posgrado.intranet.dtos.NotaDto;
+import com.posgrado.intranet.dtos.NotaResDto;
 import com.posgrado.intranet.entities.TbConvalidacion;
 import com.posgrado.intranet.entities.TbCurricula;
 import com.posgrado.intranet.entities.TbCurriculaCurso;

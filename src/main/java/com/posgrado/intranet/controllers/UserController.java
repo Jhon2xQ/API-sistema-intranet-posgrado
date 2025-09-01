@@ -7,9 +7,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.posgrado.intranet.common.config.CustomUserDetails;
+import com.posgrado.intranet.dtos.AcademicoDto;
 import com.posgrado.intranet.dtos.ApiResponse;
-import com.posgrado.intranet.dtos.user.AcademicoDto;
-import com.posgrado.intranet.dtos.user.PersonalDto;
+import com.posgrado.intranet.dtos.PersonalDto;
 import com.posgrado.intranet.services.UserService;
 
 import lombok.RequiredArgsConstructor;
