@@ -1,6 +1,7 @@
 package com.posgrado.intranet.entities;
 
 import java.io.Serial;
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -21,8 +22,9 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
+
 @Table(name = "tbResidentadoPerfil", schema = "Seguridad")
-public class TbResidentadoPerfil {
+public class TbResidentadoPerfil implements Serializable{
   @Serial
   private static final long serialVersionUID = 1L;
 

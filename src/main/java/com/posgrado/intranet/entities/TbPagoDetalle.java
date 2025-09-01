@@ -1,6 +1,7 @@
 package com.posgrado.intranet.entities;
 
 import java.io.Serial;
+import java.io.Serializable;
 import java.util.Date;
 
 import jakarta.persistence.Column;
@@ -19,7 +20,7 @@ import lombok.Setter;
 @Setter
 
 @Table(name = "tbPagoDetalle", schema = "Caja")
-public class TbPagoDetalle {
+public class TbPagoDetalle implements Serializable{
   
   @Serial
   private static final long serialVersionUID = 1L;
