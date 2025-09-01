@@ -2,7 +2,6 @@ package com.posgrado.intranet.entities;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.time.LocalDate;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -19,9 +18,8 @@ import lombok.Setter;
 @Getter
 @Setter
 
-@Table(name = "tbCurso", schema = "Matricula")
-public class TbCurso implements Serializable{
-  
+@Table(name = "tbCurricula", schema = "Curricula")
+public class TbCurricula implements Serializable{
   @Serial
   private static final long serialVersionUID = 1L;
 
@@ -29,24 +27,21 @@ public class TbCurso implements Serializable{
   @Column(name = "id")
   private String id;
 
-  @Column(name = "curso")
-  private String curso;
-
-  @Column(name = "semestre")
-  private String semestre;
+  @Column(name = "curricula")
+  private Integer curricula;
 
   @Column(name = "carrera")
   private String carrera;
 
-  @Column(name = "especialidad")
-  private String especialidad;
+  @Column(name = "estado")
+  private String estado;
 
-  @Column(name = "grupo")
-  private String grupo;
+  @Column(name = "nombre")
+  private String nombre;
 
-  @Column(name = "curricula")
-  private Integer curricula;
+  @Column(name = "nota_aprobacion")
+  private Integer notaAprobacion;
 
-  @Column(name = "fecha_finalizacion")
-  private LocalDate fechaFinalizacion;
+  @Column(name = "nota_desaprobacion")
+  private Integer notaDesaprobacion;
 }

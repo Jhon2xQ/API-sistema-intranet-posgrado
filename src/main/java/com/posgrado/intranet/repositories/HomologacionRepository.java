@@ -8,27 +8,27 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.posgrado.intranet.entities.TbHomologacion;
-import com.posgrado.intranet.entities.TbNota;
 
 @Repository
 public interface HomologacionRepository extends JpaRepository<TbHomologacion, String> {
   
-  @Query(value = """
-      SELECT h.id, h.curso, h.semestre, h.carrera, h.grupo, h.especialidad, h.curricula, h.tipo_nota, h.alumno, h.estado, h.curso_h, h.curricula_h, h.especialidad_h, h.variante_h, h.grupo_h, h.resolucion, n.nota
-      FROM Seguimiento.tbNota n
-      JOIN Seguimiento.tbHomologacion h
+  @Query(value = 
+      """
+      SELECT h.id, h.curso, h.semestre, h.carrera, h.grupo, h.especialidad, h.curricula, h.estado, h.curso_h, h.curricula_h, h.especialidad_h, h.variante_h, h.grupo_h, h.resolucion, n.nota
+      FROM [Academico_Maestria].[Seguimiento].[tbNota] n
+      JOIN [Academico_Maestria].[Seguimiento].[tbHomologacion] h
           ON h.id_curso_original = n.id_curso_concat
       WHERE n.alumno = :alumno
         AND n.carrera = :carrera
         AND n.especialidad = :especialidad
-        AND n.curricula >= :curricula
+        AND h.curricula_h >= :curricula
         AND n.estado = :estado;
-      );
-      """, nativeQuery = true
+      """, 
+      nativeQuery = true
   )
-  List<TbNota> findNotas(@Param("alumno") String alumno,
-                          @Param("carrera") String carrera,
-                          @Param("especialidad") String especialidad,
-                          @Param("curricula") Integer curricula,
-                          @Param("estado") String estado);
+  List<TbHomologacion> findNotas(@Param("alumno") String alumno,
+                                @Param("carrera") String carrera,
+                                @Param("especialidad") String especialidad,
+                                @Param("curricula") Integer curricula,
+                                @Param("estado") String estado);
 }

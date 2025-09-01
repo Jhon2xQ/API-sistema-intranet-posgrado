@@ -1,7 +1,5 @@
 package com.posgrado.intranet.controllers;
 
-import java.util.List;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,10 +20,10 @@ public class NotaController {
   private final NotaService notaService;
 
   @GetMapping()
-  public ResponseEntity<ApiResponse<List<NotaResDto>>> getNotas(@AuthenticationPrincipal CustomUserDetails userDetails) {
+  public ResponseEntity<ApiResponse<NotaResDto>> getNotas(@AuthenticationPrincipal CustomUserDetails userDetails) {
     try {
-      List<NotaResDto> notas = notaService.getNotasRegular(
-        userDetails.getUsername(), userDetails.getCarrera(), userDetails.getEspecialidad(), 0
+      NotaResDto notas = notaService.getNotasCompleto(
+        userDetails.getUsername(), userDetails.getCarrera(), userDetails.getEspecialidad(), userDetails.getCurricula()
       );
       return ResponseEntity.ok(ApiResponse.success("notas obtenidas con exito", notas));
     } catch (Exception e) {

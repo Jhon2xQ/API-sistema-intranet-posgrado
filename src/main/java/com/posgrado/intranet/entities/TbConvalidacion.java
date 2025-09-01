@@ -2,10 +2,11 @@ package com.posgrado.intranet.entities;
 
 import java.io.Serial;
 import java.io.Serializable;
-
+import java.time.LocalDate;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,53 +18,45 @@ import lombok.Setter;
 @Getter
 @Setter
 
-public class TbHomologacion implements Serializable{
-  @Serial 
+@Table(name = "tbConvalidacionReconocimiento", schema = "Seguimiento")
+public class TbConvalidacion implements Serializable{
+  @Serial
   private static final long serialVersionUID = 1L;
 
   @Id
   @Column(name = "id")
   private String id;
 
-  @Column(name = "curso")
-  private String curso;
-
-  @Column(name = "semestre")
-  private String semestre;
+  @Column(name = "alumno")
+  private String alumno;
 
   @Column(name = "carrera")
   private String carrera;
 
-  @Column(name = "grupo")
-  private String grupo;
-
   @Column(name = "especialidad")
   private String especialidad;
+
+  @Column(name = "curso")
+  private String curso;
+
+  @Column(name = "estado")
+  private String estado;
+
+  @Column(name = "variante")
+  private Integer variante;
 
   @Column(name = "curricula")
   private Integer curricula;
 
-  @Column(name = "estado")
-  private String estado;
-  
-  @Column(name = "curso_h")
-  private String cursoH;
-  
-  @Column(name = "curricula_h")
-  private Integer curriculaH;
+  @Column(name = "tipo_nota")
+  private String tipoNota;
 
-  @Column(name = "especialidad_h")
-  private String especialidadH;
-
-  @Column(name = "variante_h")
-  private Integer varianteH;
-
-  @Column(name = "grupo_h")
-  private String grupoH;
+  @Column(name = "nota")
+  private Integer nota;
 
   @Column(name = "resolucion")
   private String resolucion;
 
-  @Column(name = "nota")
-  private Integer nota;
+  @Column(name = "fecha_captura")
+  private LocalDate fechaCaptura;
 }
