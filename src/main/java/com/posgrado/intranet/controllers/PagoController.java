@@ -14,7 +14,7 @@ import com.posgrado.intranet.services.PagoService;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/api/pagos")
+@RequestMapping("/api/estudiante/pagos")
 @RequiredArgsConstructor
 public class PagoController {
   private final PagoService pagoService;
