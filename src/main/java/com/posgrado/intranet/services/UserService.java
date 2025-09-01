@@ -2,8 +2,8 @@ package com.posgrado.intranet.services;
 
 import org.springframework.stereotype.Service;
 
-import com.posgrado.intranet.dtos.user.AcademicoDto;
-import com.posgrado.intranet.dtos.user.PersonalDto;
+import com.posgrado.intranet.dtos.AcademicoDto;
+import com.posgrado.intranet.dtos.PersonalDto;
 import com.posgrado.intranet.entities.TbAlumno;
 import com.posgrado.intranet.entities.TbCarrera;
 import com.posgrado.intranet.entities.TbEspecialidad;

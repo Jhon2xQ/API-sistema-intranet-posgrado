@@ -1,4 +1,4 @@
-package com.posgrado.intranet.dtos.nota;
+package com.posgrado.intranet.dtos;
 
 import java.time.LocalDate;
 

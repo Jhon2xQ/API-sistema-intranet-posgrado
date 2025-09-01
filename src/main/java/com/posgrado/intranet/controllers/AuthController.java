@@ -8,9 +8,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.posgrado.intranet.dtos.ApiResponse;
-import com.posgrado.intranet.dtos.auth.LoginRequest;
-import com.posgrado.intranet.dtos.auth.RegisterRequest;
-import com.posgrado.intranet.dtos.jwt.JwtResponse;
+import com.posgrado.intranet.dtos.JwtResponse;
+import com.posgrado.intranet.dtos.LoginRequest;
+import com.posgrado.intranet.dtos.RegisterRequest;
 import com.posgrado.intranet.entities.TbResidentadoUsuario;
 import com.posgrado.intranet.services.AuthService;
 

@@ -1,4 +1,4 @@
-package com.posgrado.intranet.dtos.auth;
+package com.posgrado.intranet.dtos;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;

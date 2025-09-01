@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.posgrado.intranet.common.config.CustomUserDetails;
 import com.posgrado.intranet.dtos.ApiResponse;
-import com.posgrado.intranet.dtos.pagos.PagoResDto;
+import com.posgrado.intranet.dtos.PagoResDto;
 import com.posgrado.intranet.services.PagoService;
 
 import lombok.RequiredArgsConstructor;

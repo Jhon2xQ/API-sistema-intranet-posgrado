@@ -6,7 +6,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.posgrado.intranet.dtos.pagos.PagoResDto;
+import com.posgrado.intranet.dtos.PagoResDto;
 import com.posgrado.intranet.entities.TbPagoDetalle;
 import com.posgrado.intranet.repositories.AlumnoCarreraRepository;
 import com.posgrado.intranet.repositories.PagoDetalleRepository;

@@ -1,4 +1,4 @@
-package com.posgrado.intranet.dtos.user;
+package com.posgrado.intranet.dtos;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

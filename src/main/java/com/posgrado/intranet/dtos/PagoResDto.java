@@ -1,4 +1,4 @@
-package com.posgrado.intranet.dtos.pagos;
+package com.posgrado.intranet.dtos;
 
 import java.util.List;
 
