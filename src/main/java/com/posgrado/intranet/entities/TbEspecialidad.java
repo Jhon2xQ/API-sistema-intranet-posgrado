@@ -1,6 +1,7 @@
 package com.posgrado.intranet.entities;
 
 import java.io.Serial;
+import java.io.Serializable;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -18,7 +19,7 @@ import lombok.Setter;
 @Setter
 
 @Table(name = "tbEspecialidad", schema = "Academico")
-public class TbEspecialidad {
+public class TbEspecialidad implements Serializable{
 
   @Serial 
   private static final long serialVersionUID = 1L;
