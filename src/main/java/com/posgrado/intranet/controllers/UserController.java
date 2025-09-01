@@ -24,18 +24,26 @@ public class UserController {
   @GetMapping("/academica")
   public ResponseEntity<ApiResponse<AcademicoDto>> getInfoAcademica(
       @AuthenticationPrincipal CustomUserDetails userDetails) {
-    AcademicoDto academicoDto = userService.getInformacionAcademica(
+    try {
+      AcademicoDto academicoDto = userService.getInformacionAcademica(
       userDetails.getUsername(), userDetails.getCarrera(), userDetails.getEspecialidad()
-    );
-    return ResponseEntity.ok(ApiResponse.success("Información académica obtenida", academicoDto));
+      );
+      return ResponseEntity.ok(ApiResponse.success("Información académica obtenida", academicoDto));
+    } catch (Exception e) {
+      return ResponseEntity.badRequest().body(ApiResponse.error("Error al obtener la información académica: " + e.getMessage()));
+    }
   }
   
   @GetMapping("/personal")
   public ResponseEntity<ApiResponse<PersonalDto>> getInfoPersonal(
       @AuthenticationPrincipal CustomUserDetails userDetails) {
-    PersonalDto personalDto = userService.getInformacionPersonal(
+    try {
+      PersonalDto personalDto = userService.getInformacionPersonal(
       userDetails.getUsername()
-    );
-    return ResponseEntity.ok(ApiResponse.success("Información personal obtenida", personalDto));
+      );
+      return ResponseEntity.ok(ApiResponse.success("Información personal obtenida", personalDto));
+    } catch (Exception e) {
+      return ResponseEntity.badRequest().body(ApiResponse.error("Error al obtener la información personal: " + e.getMessage()));
+    }
   }
 }
