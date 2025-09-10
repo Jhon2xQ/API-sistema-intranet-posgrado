@@ -10,8 +10,8 @@
 	</parent>
 	<groupId>com.posgrado</groupId>
 	<artifactId>intranet</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
-	<packaging>war</packaging>
+	<version>1.0</version>
+	<packaging>jar</packaging>
 	<name>intranet</name>
 	<description>Api Rest del sistema intranet - Escuela de Posgrado UNSAAC</description>
 	<url/>
