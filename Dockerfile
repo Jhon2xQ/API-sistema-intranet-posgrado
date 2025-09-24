@@ -1,28 +1,30 @@
 # -------- Etapa 1: Build con Maven --------
 FROM maven:3.9.6-eclipse-temurin-21 AS build
 
-# Carpeta de trabajo
 WORKDIR /app
-
-# Copiar pom.xml y descargar dependencias primero (cache)
 COPY pom.xml .
 RUN mvn dependency:go-offline -B
 
-# Copiar el código fuente y compilar
 COPY src ./src
 RUN mvn clean package -DskipTests
 
-# -------- Etapa 2: Imagen final ligera --------
-FROM eclipse-temurin:21-jdk-alpine
-
-# Carpeta de trabajo
+# -------- Etapa 2: Extraer capas --------
+FROM eclipse-temurin:21-jdk-alpine AS extract
 WORKDIR /app
-
-# Copiar el jar construido desde la etapa anterior
 COPY --from=build /app/target/*.jar app.jar
 
-# Puerto expuesto
-EXPOSE 8080
+# Extrae las capas definidas en layers.idx
+RUN java -Djarmode=layertools -jar app.jar extract
 
-# Comando de arranque
-ENTRYPOINT ["java", "-jar", "app.jar"]
+# -------- Etapa 3: Imagen final Distroless --------
+FROM gcr.io/distroless/java21-debian12
+
+WORKDIR /app
+# Copiamos las capas de forma separada → Docker las cachea mejor
+COPY --from=extract /app/dependencies/ ./dependencies/
+COPY --from=extract /app/spring-boot-loader/ ./spring-boot-loader/
+COPY --from=extract /app/snapshot-dependencies/ ./snapshot-dependencies/
+COPY --from=extract /app/application/ ./application/
+
+EXPOSE 8080
+ENTRYPOINT ["java", "org.springframework.boot.loader.launch.JarLauncher"]

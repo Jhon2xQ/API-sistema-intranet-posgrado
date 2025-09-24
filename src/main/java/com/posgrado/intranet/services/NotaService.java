@@ -54,7 +54,7 @@ public class NotaService {
       TbCurricula curriculaData = getCurricula(nota.getCurricula(), nota.getCarrera());
 
       NotaDto dto = new NotaDto();
-      dto.setCursoId(curriculaCurso.getCurso());
+      dto.setCursoId(curriculaCurso.getCurso() + nota.getGrupo() + nota.getCarrera());
       dto.setNombreCurso(curriculaCurso.getNombre());
       dto.setCategoria(curriculaCurso.getCategoria());
       dto.setCreditos(curriculaCurso.getCreditos());
@@ -76,7 +76,7 @@ public class NotaService {
           nota.getCurricula(), nota.getGrupo());
       TbCurricula curriculaData = getCurricula(nota.getCurriculaH(), nota.getCarrera());
       NotaDto dto = new NotaDto();
-      dto.setCursoId(curriculaCurso.getCurso());
+      dto.setCursoId(curriculaCurso.getCurso() + nota.getGrupoH() + nota.getCarrera());
       dto.setNombreCurso(curriculaCurso.getNombre());
       dto.setCategoria(curriculaCurso.getCategoria());
       dto.setCreditos(curriculaCurso.getCreditos());
@@ -97,7 +97,7 @@ public class NotaService {
           nota.getCurricula());
       TbCurricula curriculaData = getCurricula(nota.getCurricula(), nota.getCarrera());
       NotaDto dto = new NotaDto();
-      dto.setCursoId(nota.getCurso());
+      dto.setCursoId(nota.getCurso() + nota.getCarrera());
       dto.setNombreCurso(curriculaCurso.getNombre());
       dto.setCategoria(curriculaCurso.getCategoria());
       dto.setCreditos(curriculaCurso.getCreditos());
