@@ -16,15 +16,26 @@ COPY --from=build /app/target/*.jar app.jar
 # Extrae las capas definidas en layers.idx
 RUN java -Djarmode=layertools -jar app.jar extract
 
-# -------- Etapa 3: Imagen final Distroless --------
-FROM gcr.io/distroless/java21-debian12
+# -------- Etapa 3: Imagen final JRE Alpine con usuario no root --------
+FROM eclipse-temurin:21-jre-alpine
+
+# Crear un usuario sin privilegios
+RUN addgroup -S appgroup && adduser -S appuser -G appgroup
 
 WORKDIR /app
-# Copiamos las capas de forma separada → Docker las cachea mejor
+
+# Copiar capas
 COPY --from=extract /app/dependencies/ ./dependencies/
 COPY --from=extract /app/spring-boot-loader/ ./spring-boot-loader/
 COPY --from=extract /app/snapshot-dependencies/ ./snapshot-dependencies/
 COPY --from=extract /app/application/ ./application/
 
+# Cambiar propietario de los archivos al usuario no root
+RUN chown -R appuser:appgroup /app
+
+# Cambiar al usuario no root
+USER appuser
+
 EXPOSE 8080
+
 ENTRYPOINT ["java", "org.springframework.boot.loader.launch.JarLauncher"]
