@@ -1,6 +1,5 @@
 package com.posgrado.intranet.common.config;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -21,9 +20,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.posgrado.intranet.common.middlewares.JwtAuthenticationFilter;
@@ -76,19 +72,19 @@ public class SecurityConfig {
 
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-    http.cors(cors -> cors.configurationSource(corsConfigurationSource()))
+    http
       .csrf(AbstractHttpConfigurer::disable)
       .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
       .authorizeHttpRequests(authz -> authz
         /* rutas publicas */
-        .requestMatchers("/api/public/**").permitAll()
-        .requestMatchers(HttpMethod.POST, "/api/auth/login").permitAll()
-        .requestMatchers(HttpMethod.POST, "/api/auth/refresh").permitAll()
-        .requestMatchers(HttpMethod.GET, "/api/health").permitAll()
+        .requestMatchers("/public/**").permitAll()
+        .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
+        .requestMatchers(HttpMethod.POST, "/auth/refresh").permitAll()
+        .requestMatchers(HttpMethod.GET, "/health").permitAll()
         
         /* rutas protegidas */
-        .requestMatchers("/api/estudiante/**").hasRole("ESTUDIANTE")
-        .requestMatchers("/api/protected/**").authenticated()
+        .requestMatchers("/estudiante/**").hasRole("ESTUDIANTE")
+        .requestMatchers("/protected/**").authenticated()
           
         /* cualquier otra ruta requiere autorizacion */
         .anyRequest().authenticated()
@@ -99,18 +95,5 @@ public class SecurityConfig {
 
     http.headers(headers -> headers.frameOptions(FrameOptionsConfig::disable));
     return http.build();
-  }
-
-  @Bean
-  public CorsConfigurationSource corsConfigurationSource() {
-    CorsConfiguration configuration = new CorsConfiguration();
-    configuration.setAllowedOriginPatterns(Arrays.asList("*"));
-    configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT"));
-    configuration.setAllowedHeaders(Arrays.asList("*"));
-    configuration.setAllowCredentials(true);
-
-    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-    source.registerCorsConfiguration("/**", configuration);
-    return source;
   }
 }

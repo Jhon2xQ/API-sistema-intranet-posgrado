@@ -39,7 +39,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
       throws ServletException, IOException {
 
     try {
-      boolean isRefreshEndpoint = request.getRequestURI().contains("/api/auth/refresh");
+      boolean isRefreshEndpoint = request.getRequestURI().contains("/auth/refresh");
       boolean isRefreshMethod = request.getMethod().contains("POST");
       String accessToken = jwtUtil.getAccessTokenFromRequest(request);
 

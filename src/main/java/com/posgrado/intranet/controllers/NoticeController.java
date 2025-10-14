@@ -15,7 +15,7 @@ import com.posgrado.intranet.services.NoticeService;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/api/notices")
+@RequestMapping("/notices")
 @RequiredArgsConstructor
 public class NoticeController {
   

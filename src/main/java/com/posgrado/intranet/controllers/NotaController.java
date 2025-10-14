@@ -14,12 +14,12 @@ import com.posgrado.intranet.services.NotaService;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/api/estudiante/notas")
+@RequestMapping("/estudiante")
 @RequiredArgsConstructor
 public class NotaController {
   private final NotaService notaService;
 
-  @GetMapping()
+  @GetMapping("/notas")
   public ResponseEntity<ApiResponse<NotaResDto>> getNotas(@AuthenticationPrincipal CustomUserDetails userDetails) {
     try {
       NotaResDto notas = notaService.getNotasCompleto(

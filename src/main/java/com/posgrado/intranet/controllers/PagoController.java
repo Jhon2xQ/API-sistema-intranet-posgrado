@@ -14,12 +14,12 @@ import com.posgrado.intranet.services.PagoService;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/api/estudiante/pagos")
+@RequestMapping("/estudiante")
 @RequiredArgsConstructor
 public class PagoController {
   private final PagoService pagoService;
 
-  @GetMapping()
+  @GetMapping("/pagos")
   public ResponseEntity<ApiResponse<PagoResDto>> getPagosByAlumno(
     @AuthenticationPrincipal CustomUserDetails userDetails
   ) {
