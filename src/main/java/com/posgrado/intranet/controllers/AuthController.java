@@ -56,9 +56,9 @@ public class AuthController {
   }
   
   @PostMapping("/refresh")
-  public ResponseEntity<ApiResponse<JwtResponse>> refreshToken(HttpServletRequest request) {
+  public ResponseEntity<ApiResponse<JwtResponse>> refreshToken(HttpServletRequest request, HttpServletResponse response) {
     try {
-      JwtResponse jwtResponse = authService.refreshToken(request);
+      JwtResponse jwtResponse = authService.refreshToken(request, response);
       return ResponseEntity.ok(
           ApiResponse.success("Token renovado exitosamente", jwtResponse));
     } catch (Exception e) {

@@ -73,7 +73,7 @@ public class AuthService {
   }
   
   @Transactional
-  public JwtResponse refreshToken(HttpServletRequest request) {
+  public JwtResponse refreshToken(HttpServletRequest request, HttpServletResponse response) {
     String accessToken = jwtUtil.getAccessTokenFromRequest(request);
     String refreshToken = cookieUtil.getRefreshTokenFromCookie(request);
     String accessTokenJti = jwtUtil.getJtiFromToken(accessToken);
@@ -87,7 +87,10 @@ public class AuthService {
         userDetails,
         null,
         userDetails.getAuthorities());
-    String newJwt = jwtUtil.generateAccessToken(authentication, refreshTokenJti);
+    String newRefreshToken = jwtUtil.generateRefreshToken(username);
+    String newjti = jwtUtil.getJtiFromToken(newRefreshToken);
+    String newJwt = jwtUtil.generateAccessToken(authentication, newjti);
+    cookieUtil.createRefreshTokenCookie(response, newRefreshToken);
     return new JwtResponse(newJwt, userDetails.getUsername());
   }
   
