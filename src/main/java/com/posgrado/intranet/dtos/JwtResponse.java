@@ -6,9 +6,11 @@ import lombok.Data;
 public class JwtResponse {
   private String accessToken;
   private String usuario;
-  
-  public JwtResponse(String accessToken, String usuario) {
+  private boolean primeraSesion;
+
+  public JwtResponse(String accessToken, String usuario, boolean primeraSesion) {
       this.accessToken = accessToken;
       this.usuario = usuario;
+      this.primeraSesion = primeraSesion;
   }
 }

@@ -71,6 +71,13 @@ public class CustomUserDetails implements UserDetails {
     return ""; // No necesitamos contraseña para JWT
   }
 
+  public boolean getPrimeraSesion() {
+    if (usuario != null) {
+      return usuario.getCreatedAt().equals(usuario.getUpdatedAt());
+    }
+    return false; // No necesitamos este dato para JWT
+  }
+
   @Override
   public boolean isAccountNonExpired() {
     return true;

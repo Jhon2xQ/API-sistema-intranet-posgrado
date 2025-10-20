@@ -46,7 +46,7 @@ public class AuthService {
       String jti = jwtUtil.getJtiFromToken(refreshToken);
       String accessToken = jwtUtil.generateAccessToken(authentication, jti);
       cookieUtil.createRefreshTokenCookie(response, refreshToken);
-      return new JwtResponse(accessToken, userDetails.getUsername());
+      return new JwtResponse(accessToken, userDetails.getUsername(), userDetails.getPrimeraSesion());
     } catch (BadCredentialsException e) {
       throw new BadCredentialsException("Credenciales invalidas");
     }
@@ -91,7 +91,7 @@ public class AuthService {
     String newjti = jwtUtil.getJtiFromToken(newRefreshToken);
     String newJwt = jwtUtil.generateAccessToken(authentication, newjti);
     cookieUtil.createRefreshTokenCookie(response, newRefreshToken);
-    return new JwtResponse(newJwt, userDetails.getUsername());
+    return new JwtResponse(newJwt, userDetails.getUsername(), userDetails.getPrimeraSesion());
   }
   
   public void logout(HttpServletResponse response) {
